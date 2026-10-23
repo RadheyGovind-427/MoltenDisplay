@@ -27,7 +27,7 @@
       @media (prefers-color-scheme: dark) {
         :root:not([data-theme="light"]):not([data-theme="hc"]) {
           --bg: #0b0d12;
-          --s1: #141822;
+          --s1: #2346a0;
           --s2: #1d2331;
           --bd: #2b3347;
           --fg: #eef1f7;
@@ -955,7 +955,9 @@
         "⚡",
         "🚀",
       ];
+
       const PAT = {};
+
       [
         [
           "Emergency",
@@ -970,9 +972,48 @@
             ["aF", "Amber flashing", ["#ffbf00", "#000000"]],
             ["rF", "Red flashing", ["#ff0000", "#000000"]],
             ["bF", "Blue flashing", ["#0000ff", "#000000"]],
+
+            // Additional police patterns
+            [
+              "policeRapid",
+              "Police: red / blue / blue / red",
+              ["#ff0000", "#0000ff", "#0000ff", "#ff0000"],
+            ],
+
+            // Additional ambulance patterns
+            ["ambulanceRB", "Ambulance: red / blue", ["#ff0000", "#0000ff"]],
+            ["ambulanceRed", "Ambulance: red flashing", ["#ff0000", "#000000"]],
+            [
+              "ambulanceBlueWhite",
+              "Ambulance: blue / white",
+              ["#0000ff", "#ffffff"],
+            ],
+            [
+              "ambulanceCycle",
+              "Ambulance: red / white / blue",
+              ["#ff0000", "#ffffff", "#0000ff"],
+            ],
+
+            // Additional emergency combinations
+            [
+              "emergencyRGB",
+              "Emergency: red / blue / white",
+              ["#ff0000", "#0000ff", "#ffffff"],
+            ],
+            [
+              "emergencyRBA",
+              "Emergency: red / blue / amber",
+              ["#ff0000", "#0000ff", "#ffbf00"],
+            ],
+            [
+              "emergencyAll",
+              "Emergency: red / blue / white / amber",
+              ["#ff0000", "#0000ff", "#ffffff", "#ffbf00"],
+            ],
           ],
           1,
         ],
+
         [
           "Alternating",
           [
@@ -982,9 +1023,24 @@
             ["ow", "Orange / white", ["#ff8000", "#ffffff"]],
             ["ga", "Green / amber", ["#00c853", "#ffbf00"]],
             ["two", "Custom two colors", ["$1", "$2"]],
+
+            // Additional two-color combinations
+            ["rb", "Red / blue alternating", ["#ff0000", "#0000ff"]],
+            ["rw", "Red / white alternating", ["#ff0000", "#ffffff"]],
+            ["bw", "Blue / white alternating", ["#0000ff", "#ffffff"]],
+            ["mw", "Magenta / white alternating", ["#ff00ff", "#ffffff"]],
+            ["cw", "Cyan / white alternating", ["#00ffff", "#ffffff"]],
+            ["rg", "Red / green alternating", ["#ff0000", "#00c853"]],
+            ["ra", "Red / amber alternating", ["#ff0000", "#ffbf00"]],
+            ["wb", "White / black alternating", ["#ffffff", "#000000"]],
+            ["bo", "Blue / orange alternating", ["#0000ff", "#ff8000"]],
+            ["pg", "Purple / green alternating", ["#8a2be2", "#00c853"]],
+            ["cy", "Cyan / yellow alternating", ["#00ffff", "#ffff00"]],
+            ["gm", "Green / magenta alternating", ["#00c853", "#ff00ff"]],
           ],
           1,
         ],
+
         [
           "Cycling",
           [
@@ -997,9 +1053,58 @@
               ["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"],
             ],
             ["rain", "Rainbow (smooth)", null],
+
+            // Additional multicolor patterns
+            [
+              "cmy",
+              "Cyan / magenta / yellow cycling",
+              ["#00ffff", "#ff00ff", "#ffff00"],
+            ],
+            [
+              "forest",
+              "Forest colors cycling",
+              ["#004d00", "#00a000", "#00c853", "#aaff00"],
+            ],
+            [
+              "sunset",
+              "Sunset colors cycling",
+              ["#ff0000", "#ff4500", "#ff8000", "#ff00aa", "#8a2be2"],
+            ],
+
+            // Additional three-color combinations
+            [
+              "rbw",
+              "Red / blue / white cycling",
+              ["#ff0000", "#0000ff", "#ffffff"],
+            ],
+            [
+              "rbg",
+              "Red / blue / green cycling",
+              ["#ff0000", "#0000ff", "#00c853"],
+            ],
+            [
+              "bya",
+              "Blue / yellow / amber cycling",
+              ["#0000ff", "#ffff00", "#ffbf00"],
+            ],
           ],
           1,
         ],
+
+        [
+          "Flashing",
+          [
+            ["wf", "White flashing", ["#ffffff", "#000000"]],
+            ["rf", "Red flashing", ["#ff0000", "#000000"]],
+            ["bf", "Blue flashing", ["#0000ff", "#000000"]],
+            ["gf", "Green flashing", ["#00c853", "#000000"]],
+            ["af", "Amber flashing", ["#ffbf00", "#000000"]],
+            ["yf", "Yellow flashing", ["#ffff00", "#000000"]],
+            ["pf", "Purple flashing", ["#8a2be2", "#000000"]],
+          ],
+          1,
+        ],
+
         [
           "Steady",
           [
@@ -1009,12 +1114,30 @@
             ["sg", "Green", ["#00c853"]],
             ["sb", "Blue", ["#0000ff"]],
             ["sc", "Custom color 1", ["$1"]],
+
+            // Additional solid colors
+            ["sy", "Yellow", ["#ffff00"]],
+            ["sp", "Purple", ["#8a2be2"]],
+            ["scy", "Cyan", ["#00ffff"]],
+            ["so", "Orange", ["#ff8000"]],
+            ["sm", "Magenta", ["#ff00ff"]],
+            ["sk", "Black", ["#000000"]],
+            ["sn", "Navy blue", ["#000080"]],
+            ["st", "Teal", ["#008080"]],
+            ["sl", "Lime", ["#7fff00"]],
+            ["srp", "Rose pink", ["#ff007f"]],
+            ["sgld", "Gold", ["#ffd700"]],
+            ["si", "Indigo", ["#4b0082"]],
+            ["slv", "Silver", ["#c0c0c0"]],
+            ["sc1", "Custom color 1", ["$1"]],
+            ["sc2", "Custom color 2", ["$2"]],
           ],
           0,
         ],
       ].forEach(([g, a, f]) =>
         a.forEach(([id, n, c]) => (PAT[id] = { n, g, c, f, h: !c })),
       );
+
       const COMBOS = [
         ["#ffff00", "#000000", "Yellow on black"],
         ["#ffffff", "#000000", "White on black"],
@@ -1559,44 +1682,71 @@ ${sl(
         steady: true,
       });
 
-      /* ---------- Engines ---------- */
       const V = {
-        t: 0,
+        timers: new Map(),
+
         run(el, o) {
-          this.halt();
-          const p = PAT[o.p] || PAT.pRB,
-            cols = (p.c || []).map((c) =>
-              c === "$1" ? o.c1 : c === "$2" ? o.c2 : c,
-            );
+          this.halt(el);
+
+          const p = PAT[o.p] || PAT.pRB;
+          const cols = (p.c || []).map((c) =>
+            c === "$1" ? o.c1 : c === "$2" ? o.c2 : c,
+          );
+
           if (p.h) {
             let hu = 0;
+
             const set = () =>
               (el.style.backgroundColor = `hsl(${hu} 100% 50%)`);
+
             set();
+
             if (o.steady) return;
-            this.t = setInterval(() => {
-              hu = (hu + o.sp * 1.5) % 360;
-              set();
-            }, 60);
+
+            this.timers.set(
+              el,
+              setInterval(() => {
+                hu = (hu + o.sp * 1.5) % 360;
+                set();
+              }, 60),
+            );
+
             return;
           }
+
           let i = 0;
+
           const set = () => (el.style.backgroundColor = cols[i % cols.length]);
+
           set();
+
           if (!p.f || o.steady || cols.length < 2) return;
-          this.t = setInterval(
-            () => {
-              i++;
-              set();
-            },
-            Math.max(334, 1500 / o.sp),
+
+          this.timers.set(
+            el,
+            setInterval(
+              () => {
+                i++;
+                set();
+              },
+              Math.max(334, 1500 / o.sp),
+            ),
           );
-        } /* never faster than 3 changes per second */,
-        halt() {
-          clearInterval(this.t);
-          this.t = 0;
+        },
+
+        halt(el) {
+          if (el) {
+            clearInterval(this.timers.get(el));
+            this.timers.delete(el);
+            return;
+          }
+
+          // No element specified: stop every animation.
+          this.timers.forEach((timer) => clearInterval(timer));
+          this.timers.clear();
         },
       };
+
       const SOS = {
         t: 0,
         on: true,
@@ -1720,6 +1870,7 @@ ${sl(
           WL.on();
         }
       });
+
       let rz = 0;
       addEventListener("resize", () => {
         clearTimeout(rz);
@@ -1836,15 +1987,17 @@ ${sl(
       };
       let cur = "home",
         pvOn = false;
+
       const Vp = {
         stop() {
           if (pvOn) {
             pvOn = false;
-            V.halt();
+            V.halt($("#vprev"));
             $("#vpv").textContent = "Preview pattern (slow)";
           }
         },
       };
+
       function pre(id, o) {
         const b = $(id);
         if (b.clientWidth) {
@@ -1913,7 +2066,7 @@ ${sl(
             dur: S.dur,
             dim: (100 - S.inten) / 100,
             run: () => V.run(content, vo(S.speed)),
-            halt: () => V.halt(),
+            halt: () => V.halt(content),
           }),
         );
       $("#vsafe").onclick = $("#ssafe").onclick = () => safety();
