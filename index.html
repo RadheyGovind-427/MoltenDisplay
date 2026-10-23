@@ -1,45 +1,66 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta name="color-scheme" content="dark light" />
     <title>MoltenDisplay</title>
     <style>
       :root {
-        --bg: #0e0f12;
-        --fg: #f2f3f5;
-        --card: #1b1d23;
-        --bd: #3a3f4b;
-        --ac: #ff8a1f;
-        --acfg: #111;
-        --dn: #c62020;
-        --r: 14px;
-        --g: 12px;
-        font-family:
-          system-ui,
-          -apple-system,
-          Roboto,
-          sans-serif;
-      }
-      [data-theme="light"] {
-        --bg: #f3f4f6;
-        --fg: #14161a;
-        --card: #fff;
-        --bd: #b9bec9;
-        --ac: #b94700;
+        --bg: #f2f3f7;
+        --s1: #fff;
+        --s2: #e8eaf1;
+        --bd: #cfd4e0;
+        --fg: #14171f;
+        --mut: #566074;
+        --ac: #c4520a;
         --acfg: #fff;
+        --dn: #d02723;
+        --r: 16px;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
       }
-      [data-theme="hc"] {
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]):not([data-theme="hc"]) {
+          --bg: #0b0d12;
+          --s1: #141822;
+          --s2: #1d2331;
+          --bd: #2b3347;
+          --fg: #eef1f7;
+          --mut: #94a1b9;
+          --ac: #ff8a1f;
+          --acfg: #1a0e00;
+          --dn: #e5322d;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0b0d12;
+        --s1: #141822;
+        --s2: #1d2331;
+        --bd: #2b3347;
+        --fg: #eef1f7;
+        --mut: #94a1b9;
+        --ac: #ff8a1f;
+        --acfg: #1a0e00;
+        --dn: #e5322d;
+      }
+      :root[data-theme="hc"] {
         --bg: #000;
-        --fg: #fff;
-        --card: #000;
+        --s1: #000;
+        --s2: #111;
         --bd: #fff;
+        --fg: #fff;
+        --mut: #e0e0e0;
         --ac: #ffe600;
         --acfg: #000;
+        --dn: #ff3b30;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
       }
       * {
         box-sizing: border-box;
@@ -47,48 +68,72 @@
       html,
       body {
         margin: 0;
-        min-height: 100%;
         background: var(--bg);
         color: var(--fg);
-        font-size: 16px;
+        font:
+          16px/1.4 system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Noto Color Emoji",
+          "Apple Color Emoji",
+          sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        min-height: 100%;
       }
       [hidden] {
         display: none !important;
       }
-      .scr {
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        background: var(--bg);
+        z-index: 10;
+      }
+      main {
         max-width: 720px;
         margin: 0 auto;
-        padding: 12px;
+        padding: 14px 14px 100px;
+      }
+      .scr {
         display: flex;
         flex-direction: column;
-        gap: var(--g);
+        gap: 14px;
       }
       h1 {
-        margin: 8px 0 0;
+        margin: 6px 0 0;
         font-size: 2rem;
-        letter-spacing: 0.5px;
+        letter-spacing: -0.5px;
+        background: linear-gradient(90deg, var(--ac), #ff5e62);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
       }
       h2 {
         margin: 0;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+        letter-spacing: -0.3px;
       }
       h3 {
-        margin: 6px 0 0;
-        font-size: 1rem;
+        margin: 4px 0 0;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--mut);
+      }
+      p {
+        margin: 0;
       }
       .sub {
-        margin: 0;
-        opacity: 0.8;
+        color: var(--mut);
       }
       .small {
         font-size: 0.85rem;
-        opacity: 0.8;
-        margin: 0;
-      }
-      header {
-        display: flex;
-        align-items: center;
-        gap: var(--g);
+        color: var(--mut);
       }
       button,
       select,
@@ -97,34 +142,56 @@
         font: inherit;
         color: inherit;
       }
+      button {
+        cursor: pointer;
+      }
       .btn,
       .chip,
       .tile {
-        min-height: 48px;
-        padding: 10px 14px;
+        border: 1px solid var(--bd);
+        background: var(--s1);
         border-radius: var(--r);
-        border: 2px solid var(--bd);
-        background: var(--card);
-        cursor: pointer;
+        min-height: 48px;
+        padding: 10px 16px;
         font-weight: 600;
+        transition:
+          transform 0.12s,
+          border-color 0.12s;
+      }
+      .btn:active,
+      .chip:active,
+      .tile:active {
+        transform: scale(0.97);
+      }
+      .btn:hover,
+      .chip:hover,
+      .tile:hover {
+        border-color: var(--ac);
       }
       .btn.pri {
-        background: var(--ac);
+        background: linear-gradient(135deg, var(--ac), #ff5e62);
         color: var(--acfg);
-        border-color: var(--ac);
+        border: 0;
         min-height: 56px;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
+        box-shadow: 0 8px 24px -10px var(--ac);
       }
-      .btn.dn,
-      .tile.em {
+      .btn.dn {
         background: var(--dn);
         color: #fff;
         border-color: var(--dn);
       }
       .chip {
-        min-height: 44px;
-        padding: 6px 12px;
+        min-height: 42px;
+        padding: 6px 14px;
         font-weight: 500;
+        border-radius: 999px;
+        font-size: 0.92rem;
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--ac);
+        color: var(--acfg);
+        border-color: var(--ac);
       }
       button:focus-visible,
       input:focus-visible,
@@ -133,35 +200,70 @@
         outline: 3px solid var(--ac);
         outline-offset: 2px;
       }
-      .tile {
-        min-height: 92px;
-        font-size: 1.15rem;
+      .hero {
+        min-height: 120px;
+        width: 100%;
+        border: 0;
+        border-radius: 22px;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #e5322d, #a30f2d);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 4px;
+        box-shadow: 0 14px 34px -14px #e5322d;
       }
-      .tile.em {
-        min-height: 110px;
-        font-size: 1.5rem;
-        width: 100%;
-      }
-      .tile b {
-        font-size: 1.8rem;
+      .hero b {
+        font-size: 2.4rem;
       }
       .grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--g);
+        gap: 12px;
       }
-      .grid .wide {
-        grid-column: 1/-1;
+      .tile {
+        min-height: 112px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        gap: 2px;
+        padding: 14px;
+        text-align: left;
+        border-radius: 20px;
+      }
+      .tile b {
+        font-size: 1.8rem;
+      }
+      .tile span {
+        font-weight: 400;
+        font-size: 0.8rem;
+        color: var(--mut);
+      }
+      .card {
+        background: var(--s1);
+        border: 1px solid var(--bd);
+        border-radius: 20px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
       .chips {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+      }
+      .scrollx {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+      }
+      .scrollx .chip {
+        flex: none;
       }
       .row {
         display: flex;
@@ -169,70 +271,75 @@
         flex-wrap: wrap;
         align-items: center;
       }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
       label {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        font-size: 0.9rem;
+        gap: 6px;
+        font-size: 0.88rem;
+        color: var(--mut);
       }
       label.ck {
         flex-direction: row;
         align-items: center;
         gap: 10px;
         min-height: 44px;
+        color: var(--fg);
+        font-size: 1rem;
       }
       input[type="checkbox"] {
         width: 24px;
         height: 24px;
+        accent-color: var(--ac);
       }
       input[type="range"] {
         width: 100%;
         height: 32px;
+        accent-color: var(--ac);
       }
       input[type="color"] {
         width: 100%;
-        height: 44px;
-        border: 2px solid var(--bd);
-        border-radius: 10px;
-        background: none;
-        padding: 2px;
+        height: 46px;
+        border: 1px solid var(--bd);
+        border-radius: 12px;
+        background: var(--s2);
+        padding: 3px;
       }
       input[type="text"],
       textarea,
       select {
-        padding: 10px;
-        border-radius: 10px;
-        border: 2px solid var(--bd);
-        background: var(--card);
         width: 100%;
         min-height: 46px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--bd);
+        background: var(--s2);
+        color: var(--fg);
       }
       textarea {
         min-height: 90px;
         resize: vertical;
       }
-      .two {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: var(--g);
-      }
-      .box {
-        border: 2px solid var(--bd);
-        border-radius: var(--r);
-        padding: 12px;
-        background: var(--card);
-        font-size: 0.9rem;
+      header.top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
       .prev {
         aspect-ratio: 16/9;
         width: 100%;
-        border: 2px solid var(--bd);
-        border-radius: 12px;
+        border: 1px solid var(--bd);
+        border-radius: 16px;
         overflow: hidden;
         position: relative;
         background: #000;
       }
-      .guides::after {
+      .prev.guides::after {
         content: "";
         position: absolute;
         inset: 0;
@@ -242,7 +349,6 @@
           linear-gradient(#fff9, #fff9) center/100% 1px no-repeat;
       }
       .tw {
-        position: relative;
         width: 100%;
         height: 100%;
         display: flex;
@@ -256,18 +362,12 @@
         line-height: 1.1;
         padding: 2%;
         font-weight: 800;
-        font-family:
-          system-ui, "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji",
-          sans-serif;
       }
       .sc {
         flex: none;
         white-space: nowrap;
         font-weight: 800;
         line-height: 1.1;
-        font-family:
-          system-ui, "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji",
-          sans-serif;
       }
       @keyframes scr {
         from {
@@ -285,17 +385,18 @@
       .emo button {
         font-size: 1.7rem;
         min-height: 52px;
-        border-radius: 10px;
-        border: 2px solid var(--bd);
-        background: var(--card);
+        border-radius: 12px;
+        border: 1px solid var(--bd);
+        background: var(--s2);
       }
       #emoin {
         font-size: 1.5rem;
       }
       .sos {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         letter-spacing: 4px;
         text-align: center;
+        color: var(--fg);
       }
       ul {
         list-style: none;
@@ -303,21 +404,62 @@
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
       }
       li.m {
-        border: 2px solid var(--bd);
-        border-radius: var(--r);
-        padding: 10px;
-        background: var(--card);
+        border: 1px solid var(--bd);
+        border-radius: 16px;
+        padding: 12px;
+        background: var(--s1);
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
       }
       .mt {
         font-weight: 700;
-        font-size: 1.1rem;
         overflow-wrap: anywhere;
+      }
+      nav.tabs {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        display: flex;
+        justify-content: center;
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+        background: color-mix(in srgb, var(--s1) 88%, transparent);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-top: 1px solid var(--bd);
+      }
+      nav.tabs div {
+        display: flex;
+        gap: 2px;
+        width: 100%;
+        max-width: 720px;
+      }
+      nav.tabs button {
+        flex: 1;
+        border: 0;
+        background: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 6px 0;
+        border-radius: 12px;
+        font-size: 0.68rem;
+        color: var(--mut);
+        min-height: 52px;
+      }
+      nav.tabs button b {
+        font-size: 1.3rem;
+        font-weight: 400;
+      }
+      nav.tabs button[aria-current="page"] {
+        color: var(--ac);
+        background: var(--s2);
       }
       #stage {
         position: fixed;
@@ -326,14 +468,15 @@
         background: #000;
         touch-action: manipulation;
       }
-      #content {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-      }
+      #content,
       #dim {
         position: absolute;
         inset: 0;
+      }
+      #content {
+        overflow: hidden;
+      }
+      #dim {
         background: #000;
         pointer-events: none;
       }
@@ -341,7 +484,7 @@
         position: absolute;
         left: 8px;
         right: 8px;
-        top: 8px;
+        top: calc(8px + env(safe-area-inset-top, 0px));
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
@@ -352,12 +495,11 @@
         min-height: 56px;
         min-width: 56px;
         padding: 8px 14px;
-        border-radius: 12px;
+        border-radius: 14px;
         border: 3px solid #fff;
         background: rgba(0, 0, 0, 0.72);
         color: #fff;
         font-weight: 700;
-        font-size: 1rem;
       }
       #cd {
         align-self: center;
@@ -371,7 +513,7 @@
         position: absolute;
         left: 8px;
         right: 8px;
-        bottom: 8px;
+        bottom: calc(8px + env(safe-area-inset-bottom, 0px));
         z-index: 2;
         background: rgba(0, 0, 0, 0.78);
         color: #fff;
@@ -387,17 +529,16 @@
         position: fixed;
         inset: 0;
         z-index: 80;
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.8);
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 12px;
       }
-      #modal .box {
+      #modal .card {
         max-width: 560px;
-        max-height: 92vh;
+        max-height: 90vh;
         overflow: auto;
-        font-size: 0.95rem;
       }
       #modal li {
         list-style: disc;
@@ -407,13 +548,13 @@
       #toast {
         position: fixed;
         left: 50%;
-        bottom: 20px;
+        bottom: calc(90px + env(safe-area-inset-bottom, 0px));
         transform: translateX(-50%);
         z-index: 90;
-        background: #222;
-        color: #fff;
-        border: 2px solid #fff;
-        border-radius: 12px;
+        background: var(--s2);
+        color: var(--fg);
+        border: 1px solid var(--bd);
+        border-radius: 14px;
         padding: 10px 14px;
         max-width: 92vw;
         text-align: center;
@@ -421,35 +562,32 @@
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
-          scroll-behavior: auto !important;
         }
       }
       @media (orientation: landscape) and (max-height: 480px) {
         .tile {
-          min-height: 70px;
+          min-height: 80px;
         }
-        .tile.em {
-          min-height: 70px;
-        }
-        h1 {
-          font-size: 1.5rem;
+        .hero {
+          min-height: 80px;
         }
       }
     </style>
   </head>
   <body>
     <main id="app"></main>
+    <nav class="tabs" id="tabs" aria-label="Main"><div></div></nav>
     <div id="stage" hidden>
       <div id="content"></div>
       <div id="dim"></div>
       <div class="ctl">
         <button id="stopBtn" aria-label="Stop display">■ Stop</button
-        ><span id="cd" aria-live="off"></span
+        ><span id="cd"></span
         ><button id="lockBtn" aria-label="Lock touch">🔒 Lock</button>
       </div>
       <div id="hint" hidden>
-        Touch lock on. Hold 🔓 for 1.5 s to unlock. Hold ■ for 1 s to stop.
-        Android Back also stops.
+        Touch lock is on. Hold 🔓 for 1.5 s to unlock, or hold ■ for 1 s to
+        stop. Android Back also stops.
       </div>
     </div>
     <div
@@ -465,7 +603,7 @@
       "use strict";
       const $ = (s, r = document) => r.querySelector(s),
         $$ = (s, r = document) => [...r.querySelectorAll(s)];
-      function h(t, p = {}, ...k) {
+      const h = (t, p = {}, ...k) => {
         const e = document.createElement(t);
         for (const [a, v] of Object.entries(p)) {
           if (a === "class") e.className = v;
@@ -474,569 +612,200 @@
         }
         e.append(...k);
         return e;
-      }
+      };
       const reduced = !!(
         window.matchMedia &&
         matchMedia("(prefers-reduced-motion: reduce)").matches
       );
 
       /* ---------- Data ---------- */
-
-      const P = [
-        // Greetings and introductions
-        "HELLO!",
-        "HI!",
-        "GOOD MORNING",
-        "GOOD AFTERNOON",
-        "GOOD EVENING",
-        "GOOD NIGHT",
-        "GOODBYE!",
-        "HOW ARE YOU?",
-        "NICE TO MEET YOU",
-        "MY NAME IS...",
-        "I'M HERE",
-        "I'M COMING",
-        "I'M LEAVING NOW",
-
-        // Basic conversation
-        "COME HERE",
-        "CAN YOU HEAR ME?",
-        "WAIT FOR ME",
-        "THANK YOU",
-        "EXCUSE ME",
-        "PLEASE WAIT",
-        "FOLLOW ME",
-        "HELP ME",
-        "STOP",
-        "GO AHEAD",
-        "BEHIND YOU",
-        "WAIT FOR ME HERE",
-        "CALL ME",
-        "YES",
-        "NO",
-        "OK",
-        "I'LL BE BACK",
-        "PLEASE MOVE ASIDE",
-        "PLEASE COME CLOSER",
-        "PLEASE STAY HERE",
-        "PLEASE FOLLOW ME",
-        "LET'S GO",
-        "LET'S WAIT",
-        "I UNDERSTAND",
-        "I DON'T UNDERSTAND",
-        "PLEASE REPEAT",
-        "SPEAK SLOWLY",
-        "PLEASE WRITE IT DOWN",
-        "CAN YOU HELP ME?",
-        "DO YOU UNDERSTAND?",
-        "I AGREE",
-        "I DISAGREE",
-        "THAT'S RIGHT",
-        "THAT'S WRONG",
-        "NO PROBLEM",
-        "YOU'RE WELCOME",
-        "I'M SORRY",
-        "PLEASE FORGIVE ME",
-        "ONE MOMENT",
-        "JUST A MINUTE",
-        "NOT NOW",
-        "MAYBE LATER",
-        "OF COURSE",
-        "I DON'T KNOW",
-        "I'M NOT SURE",
-
-        // Getting someone's attention
-        "EXCUSE ME, PLEASE!",
-        "PLEASE LOOK HERE",
-        "LOOK AT ME",
-        "I NEED YOUR ATTENTION",
-        "CAN YOU SEE ME?",
-        "PLEASE COME THIS WAY",
-        "PLEASE LISTEN",
-        "I WANT TO TALK",
-        "I HAVE A QUESTION",
-        "CAN I ASK SOMETHING?",
-
-        // Directions and movement
-        "COME WITH ME",
-        "GO STRAIGHT",
-        "TURN LEFT",
-        "TURN RIGHT",
-        "STOP HERE",
-        "KEEP GOING",
-        "SLOW DOWN",
-        "SPEED UP",
-        "MOVE BACK",
-        "MOVE FORWARD",
-        "STAY CLOSE",
-        "KEEP YOUR DISTANCE",
-        "WATCH YOUR STEP",
-        "WATCH OUT!",
-        "BE CAREFUL!",
-        "THE WAY IS CLEAR",
-        "THE WAY IS BLOCKED",
-        "THIS WAY",
-        "THAT WAY",
-        "WHERE ARE YOU?",
-        "WHERE SHOULD I GO?",
-        "I'M FOLLOWING YOU",
-
-        // Personal needs
-        "I NEED WATER",
-        "I NEED FOOD",
-        "I NEED REST",
-        "I NEED TO SIT DOWN",
-        "I NEED A BREAK",
-        "I'M TIRED",
-        "I'M COLD",
-        "I'M HOT",
-        "I'M FEELING UNWELL",
-        "I NEED THE WASHROOM",
-        "PLEASE GIVE ME SOME SPACE",
-        "PLEASE WAIT A LITTLE LONGER",
-        "I'M READY",
-        "I'M NOT READY YET",
-
-        // Questions
-        "WHAT HAPPENED?",
-        "WHAT DO YOU NEED?",
-        "WHERE ARE WE?",
-        "WHERE IS THE EXIT?",
-        "WHERE IS THE NEAREST SHOP?",
-        "WHAT TIME IS IT?",
-        "HOW FAR IS IT?",
-        "IS EVERYTHING OK?",
-        "IS IT SAFE?",
-        "CAN WE GO NOW?",
-        "CAN YOU SHOW ME?",
-        "CAN YOU POINT THE WAY?",
-        "WHO ARE YOU?",
-        "WHO IS THERE?",
-        "WHAT IS YOUR NAME?",
-
-        // Coordination
-        "STAY TOGETHER",
-        "DON'T LEAVE ME",
-        "MEET ME HERE",
-        "MEET ME OUTSIDE",
-        "I'M WAITING HERE",
-        "I'LL MEET YOU THERE",
-        "I'M ON MY WAY",
-        "I'M RUNNING LATE",
-        "PLEASE COME QUICKLY",
-        "PLEASE SLOW DOWN",
-        "LET'S STAY TOGETHER",
-        "WAIT UNTIL I RETURN",
-        "FOLLOW AT A SAFE DISTANCE",
-        "I'LL GO FIRST",
-        "YOU GO FIRST",
-
-        // Road and visibility
-        "PLEASE WATCH FOR TRAFFIC",
-        "VEHICLE APPROACHING",
-        "PLEASE STAY OFF THE ROAD",
-        "USE THE FOOTPATH",
-        "PLEASE STOP THE VEHICLE",
-        "I NEED TO CROSS THE ROAD",
-        "PLEASE HELP ME CROSS",
-        "LOW VISIBILITY AHEAD",
-        "DANGER AHEAD",
-        "PLEASE BE VISIBLE",
-        "STAY AWAY FROM TRAFFIC",
-        "PLEASE TURN ON YOUR LIGHTS",
-
-        // Polite requests
-        "PLEASE HELP ME",
-        "PLEASE WAIT FOR ME",
-        "PLEASE SHOW ME THE WAY",
-        "PLEASE CALL MY FRIEND",
-        "PLEASE CALL MY FAMILY",
-        "PLEASE SHARE YOUR LOCATION",
-        "PLEASE GIVE ME A MOMENT",
-        "PLEASE DON'T GO",
-        "PLEASE STAY WITH ME",
-        "PLEASE LET ME PASS",
-
-        // Closing messages
-        "THANKS FOR YOUR HELP",
-        "TAKE CARE",
-        "SEE YOU SOON",
-        "SEE YOU LATER",
-        "HAVE A NICE DAY",
-        "EVERYTHING IS OK",
-        "I'M SAFE",
-        "I'M ALL RIGHT",
-        "PROBLEM SOLVED",
-        "GOOD JOB!",
-      ];
-
-      const EM = [
-        // General assistance
+      const MSG = {
+        Emergency: [
+          "HELP!",
+          "I NEED ASSISTANCE",
+          "PLEASE CALL EMERGENCY SERVICES",
+          "PLEASE CALL THE POLICE",
+          "PLEASE CALL AN AMBULANCE",
+          "I AM LOST",
+          "I AM NOT SAFE",
+          "I NEED A SAFE PLACE",
+          "SOMEONE IS INJURED",
+          "I NEED MEDICAL HELP",
+          "I CANNOT BREATHE PROPERLY",
+          "THERE HAS BEEN AN ACCIDENT",
+          "DANGER AHEAD",
+          "PLEASE STAY WITH ME",
+        ],
+        Medical: [
+          "I FEEL DIZZY",
+          "I AM IN PAIN",
+          "I MAY FAINT",
+          "I NEED MY MEDICINE",
+          "PLEASE GET A FIRST AID KIT",
+          "PLEASE FIND A DOCTOR",
+          "PLEASE HELP ME SIT DOWN",
+          "I’M FEELING UNWELL",
+        ],
+        Communication: [
+          "I CANNOT HEAR YOU",
+          "PLEASE SPEAK SLOWLY",
+          "PLEASE FACE ME WHEN SPEAKING",
+          "PLEASE WRITE IT DOWN",
+          "I NEED HELP COMMUNICATING",
+          "I UNDERSTAND",
+          "I DON’T UNDERSTAND",
+          "PLEASE REPEAT",
+        ],
+        Greetings: [
+          "HELLO!",
+          "HI!",
+          "GOOD MORNING",
+          "GOOD AFTERNOON",
+          "GOOD EVENING",
+          "GOOD NIGHT",
+          "HOW ARE YOU?",
+          "NICE TO MEET YOU",
+          "MY NAME IS…",
+          "GOODBYE!",
+          "SEE YOU SOON",
+          "TAKE CARE",
+        ],
+        Directions: [
+          "COME WITH ME",
+          "FOLLOW ME",
+          "THIS WAY",
+          "TURN LEFT",
+          "TURN RIGHT",
+          "GO STRAIGHT",
+          "STOP HERE",
+          "SLOW DOWN",
+          "WATCH YOUR STEP",
+          "THE WAY IS BLOCKED",
+          "WHERE IS THE EXIT?",
+          "PLEASE SHOW ME THE WAY",
+        ],
+        "Road safety": [
+          "VEHICLE APPROACHING",
+          "PLEASE STOP THE VEHICLE",
+          "PLEASE HELP ME CROSS",
+          "USE THE FOOTPATH",
+          "STAY AWAY FROM TRAFFIC",
+          "LOW VISIBILITY AHEAD",
+          "MY VEHICLE HAS BROKEN DOWN",
+          "PLEASE TURN ON YOUR LIGHTS",
+        ],
+        Needs: [
+          "I NEED WATER",
+          "I NEED FOOD",
+          "I NEED A BREAK",
+          "I NEED TO SIT DOWN",
+          "I’M COLD",
+          "I’M HOT",
+          "I NEED SHELTER",
+          "I NEED THE WASHROOM",
+        ],
+        Coordination: [
+          "WAIT FOR ME",
+          "I’M COMING",
+          "I’M ON MY WAY",
+          "I’M RUNNING LATE",
+          "MEET ME HERE",
+          "STAY TOGETHER",
+          "DON’T LEAVE ME",
+          "I’M LOOKING FOR MY FRIEND",
+          "I’M LOOKING FOR MY FAMILY",
+          "LET’S GO",
+        ],
+        Polite: [
+          "THANK YOU",
+          "EXCUSE ME",
+          "PLEASE",
+          "I’M SORRY",
+          "YOU’RE WELCOME",
+          "NO PROBLEM",
+          "YES",
+          "NO",
+          "ONE MOMENT",
+          "I’M SAFE",
+          "EVERYTHING IS OK",
+        ],
+      };
+      const CATS = Object.keys(MSG);
+      const EMG = [
         "HELP!",
-        "I NEED ASSISTANCE.",
-        "PLEASE CALL SOMEONE.",
-        "I AM LOST.",
-        "PLEASE WAIT.",
-        "I CANNOT HEAR YOU.",
-        "PLEASE GUIDE ME.",
-        "CALL EMERGENCY SERVICES.",
-        "PLEASE HELP ME NOW.",
-        "I NEED SOMEONE'S HELP.",
-        "PLEASE STAY WITH ME.",
-        "PLEASE GET SOMEONE.",
-        "I NEED IMMEDIATE ASSISTANCE.",
-        "PLEASE DO NOT LEAVE ME ALONE.",
-        "I NEED A SAFE PLACE.",
-        "PLEASE SHOW ME THE WAY TO SAFETY.",
-
-        // Communication difficulties
-        "I CANNOT HEAR YOU CLEARLY.",
-        "PLEASE SPEAK SLOWLY.",
-        "PLEASE FACE ME WHEN SPEAKING.",
-        "I CANNOT UNDERSTAND YOU.",
-        "PLEASE WRITE YOUR MESSAGE.",
-        "I CANNOT SPEAK LOUDLY.",
-        "PLEASE USE SIMPLE WORDS.",
-        "PLEASE GET SOMEONE WHO CAN HELP ME COMMUNICATE.",
-        "I NEED HELP COMMUNICATING.",
-        "PLEASE SHOW ME WHAT YOU MEAN.",
-
-        // Finding people
-        "I AM LOOKING FOR MY FAMILY.",
-        "I AM LOOKING FOR MY FRIEND.",
-        "I HAVE LOST MY GROUP.",
-        "PLEASE HELP ME FIND MY COMPANION.",
-        "PLEASE CALL MY FAMILY.",
-        "PLEASE CONTACT MY FRIEND.",
-        "I AM SEPARATED FROM MY GROUP.",
-        "PLEASE HELP ME FIND THE EXIT.",
-        "I NEED HELP FINDING MY WAY.",
-
-        // Medical assistance
-        "I NEED MEDICAL HELP.",
-        "PLEASE CALL AN AMBULANCE.",
-        "I AM FEELING UNWELL.",
-        "I FEEL DIZZY.",
-        "I HAVE DIFFICULTY BREATHING.",
-        "I AM IN PAIN.",
-        "I HAVE BEEN INJURED.",
-        "PLEASE GET A FIRST AID KIT.",
-        "I NEED MY MEDICINE.",
-        "PLEASE FIND A DOCTOR.",
-        "SOMEONE IS INJURED.",
-        "SOMEONE NEEDS MEDICAL ATTENTION.",
-        "I MAY FAINT.",
-        "PLEASE HELP ME SIT DOWN.",
-        "PLEASE DO NOT MOVE THE INJURED PERSON UNLESS NECESSARY FOR SAFETY.",
-
-        // Roadside and travel emergencies
-        "I AM STRANDED.",
-        "MY VEHICLE HAS BROKEN DOWN.",
-        "I NEED ROADSIDE ASSISTANCE.",
-        "PLEASE CALL THE POLICE.",
-        "PLEASE HELP ME FIND A SAFE PLACE.",
-        "THERE IS AN ACCIDENT.",
-        "THERE IS DANGER ON THE ROAD.",
-        "PLEASE WARN OTHER PEOPLE.",
-        "I CANNOT SEE THE ROAD CLEARLY.",
-        "THE VISIBILITY IS VERY POOR.",
-        "PLEASE HELP ME GET OFF THE ROAD SAFELY.",
-        "PLEASE KEEP AWAY FROM TRAFFIC.",
-        "I NEED HELP CROSSING THE ROAD.",
-        "PLEASE CONTACT ROADside ASSISTANCE.",
-
-        // Personal safety
-        "I DO NOT FEEL SAFE.",
-        "PLEASE STAY WITH ME.",
-        "SOMEONE IS FOLLOWING ME.",
-        "I NEED A SAFE PLACE TO WAIT.",
-        "PLEASE CALL SECURITY.",
-        "PLEASE CALL THE POLICE IF THERE IS IMMEDIATE DANGER.",
-        "PLEASE GET HELP FROM NEARBY STAFF.",
-        "PLEASE DO NOT APPROACH THE DANGER.",
-        "PLEASE HELP ME REACH A PUBLIC PLACE.",
-        "I NEED HELP GETTING HOME SAFELY.",
-
-        // Weather and environmental conditions
-        "I AM TOO COLD.",
-        "I AM OVERHEATING.",
-        "I NEED SHELTER.",
-        "I NEED WARM CLOTHING.",
-        "THE WEATHER IS DANGEROUS.",
-        "THERE IS HEAVY FOG.",
-        "I CANNOT SEE CLEARLY.",
-        "PLEASE HELP ME FIND SHELTER.",
-
-        // Lost property and identification
-        "I HAVE LOST MY PHONE.",
-        "I HAVE LOST MY WALLET.",
-        "I HAVE LOST MY DOCUMENTS.",
-        "I NEED HELP CONTACTING MY FAMILY.",
-        "PLEASE HELP ME FIND MY BELONGINGS.",
-        "I NEED HELP IDENTIFYING MY LOCATION.",
-
-        // Reassurance and status
-        "I AM SAFE NOW.",
-        "I AM NOT SAFE.",
-        "I AM ALONE.",
-        "I NEED SOMEONE TO STAY WITH ME.",
-        "PLEASE CHECK ON ME.",
-        "I CANNOT CONTINUE WALKING.",
-        "I NEED TO REST.",
-        "I NEED WATER.",
-        "I NEED FOOD.",
-        "PLEASE HELP ME AS SOON AS POSSIBLE.",
-      ];
-
-      const EMD = [
-        // Immediate distress
-        "HELP!",
-        "SOS",
-        "PLEASE HELP",
-        "CALL FOR HELP",
-        "EMERGENCY",
         "I NEED ASSISTANCE",
-        "URGENT HELP NEEDED",
-        "PLEASE HELP ME NOW",
-        "I AM IN DANGER",
-        "I NEED IMMEDIATE HELP",
-        "SEND HELP NOW",
-        "PLEASE DO NOT LEAVE ME",
-
-        // Emergency services
         "CALL EMERGENCY SERVICES",
-        "CALL AN AMBULANCE",
         "CALL THE POLICE",
-        "CALL THE FIRE SERVICE",
-        "CONTACT EMERGENCY RESPONDERS",
-        "GET MEDICAL HELP NOW",
-        "CALL FOR FIRST AID",
-        "GET HELP FROM SECURITY",
-
-        // Medical emergencies
+        "CALL AN AMBULANCE",
         "MEDICAL EMERGENCY",
-        "SOMEONE IS INJURED",
-        "I AM INJURED",
-        "I NEED A DOCTOR",
-        "I CANNOT BREATHE PROPERLY",
-        "I MAY FAINT",
-        "PLEASE GET A FIRST AID KIT",
-        "PLEASE HELP THE INJURED PERSON",
-        "I NEED URGENT MEDICAL ATTENTION",
-
-        // Accident and danger
-        "THERE HAS BEEN AN ACCIDENT",
-        "DANGER",
-        "DANGER AHEAD",
-        "GET TO SAFETY",
-        "MOVE AWAY FROM DANGER",
-        "STAY BACK",
-        "KEEP CLEAR",
-        "DO NOT APPROACH",
-        "ROAD ACCIDENT",
-        "VEHICLE BREAKDOWN",
-        "HAZARD ON THE ROAD",
-        "POOR VISIBILITY",
-        "HEAVY FOG AHEAD",
-        "STOP AND CHECK FOR DANGER",
-
-        // Personal safety
+        "I AM LOST",
         "I AM NOT SAFE",
+        "DANGER AHEAD",
         "I NEED A SAFE PLACE",
-        "PLEASE STAY WITH ME",
-        "I NEED PROTECTION",
-        "PLEASE GET SECURITY",
-        "PLEASE CONTACT THE POLICE",
-        "I NEED HELP GETTING TO SAFETY",
-        "PLEASE ALERT NEARBY PEOPLE",
-
-        // Lost or stranded
-        "I AM LOST",
-        "I AM STRANDED",
-        "I NEED HELP FINDING MY LOCATION",
-        "I AM SEPARATED FROM MY GROUP",
-        "PLEASE CONTACT MY FAMILY",
-        "PLEASE HELP ME GET HOME",
-        "I NEED TRANSPORT TO SAFETY",
-
-        // Immediate attention signals
-        "LOOK HERE!",
-        "PLEASE STOP!",
-        "STOP! DANGER!",
-        "WATCH OUT!",
-        "PLEASE NOTICE ME",
-        "I NEED YOUR ATTENTION",
-        "PLEASE COME HERE",
-        "PLEASE SEND SOMEONE",
-        "CAN ANYONE HELP ME?",
-        "IS ANYONE THERE?",
-
-        // Status signals
-        "I AM SAFE",
-        "I NEED HELP",
-        "I AM INJURED",
-        "I AM LOST",
-        "I AM ALONE",
-        "I NEED MEDICAL HELP",
-        "I NEED POLICE ASSISTANCE",
-        "HELP IS NEEDED HERE",
-        "EMERGENCY AT THIS LOCATION",
+        "SOMEONE IS INJURED",
+        "THERE HAS BEEN AN ACCIDENT",
       ];
-
-      const CATS = [
-        "Emergency",
-        "Medical Emergency",
-        "Personal Safety",
-        "Road Safety",
-        "Communication",
-        "Conversation",
-        "Greetings",
-        "Requests",
-        "Questions",
-        "Directions",
-        "Travel",
-        "Public Transport",
-        "Navigation",
-        "Friends",
-        "Family",
-        "Finding People",
-        "General",
-        "Personal Needs",
-        "Food and Water",
-        "Health and Wellbeing",
-        "Weather and Shelter",
-        "Lost and Found",
-        "Roadside Assistance",
-        "Accidents and Hazards",
-        "Getting Attention",
-        "Help and Assistance",
-        "Safety Status",
-        "Coordination",
-        "Polite Expressions",
-        "Thanks and Apologies",
-        "Goodbyes",
-      ];
-      const DLIB = [
-        ...EM.map((t) => ({ t, c: "Emergency", f: 0 })),
-        ...P.map((t) => ({
-          t,
-          c:
-            t === "FOLLOW ME" || t === "WAIT FOR ME HERE"
-              ? "Travel"
-              : "Conversation",
-          f: 0,
-        })),
-      ];
+      const DLIB = CATS.flatMap((c) => MSG[c].map((t) => ({ t, c, f: 0 })));
       const ARROW = "\u{1F6B6}\u200D\u27A1\uFE0F";
-
       const ECAT = {
         Greetings: "👋 🙋 🤝 🙏 😊 🫡 🤗 👊 🖐️ ✋ 🫶 🤙 💁 🙇‍♂️ 🙇‍♀️",
-
         Happy: "😀 😃 😄 😁 🥳 😎 🤩 😍 😌 😊 ☺️ 🙂 😇 🤭 😏 🤗 🥰",
-
         Love: "❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 🩷 🩵 🥰 😘 💕 💞 💓 💗 💖 💘 💝 💟 💋",
-
         Celebration: "🎉 🎊 🥳 🎂 🎈 🔥 ✨ 🍾 🎁 🏆 🥇 🥈 🥉 🎆 🎇 🪅 🪩 🥂 🎖️",
-
         Laughter: "😂 🤣 😆 😹 😅 😜 🤪 😝 😛 😋 🤭 😁 😄 💀 🗿",
-
         Approval: "👍 👏 🙌 ✅ 💯 👌 ⭐ 🌟 🏅 🏆 💪 🤝 ☑️ ✔️ 🫡 🔥",
-
         Gestures:
           "👋 ✋ 👉 👈 👆 👇 🤞 ✌️ 🤟 🤘 🤙 🫰 🫶 🙌 🙏 👊 ✊ 🖐️ 🫵 " +
           ARROW +
           " ➡️ ⬅️ ⬆️ ⬇️ ↗️ ↘️ ↙️ ↖️",
-
         Warning: "⚠️ 🚫 ❗ ❓ 🛑 🆘 🚨 ☎️ ⛔ ❌ ‼️ ⁉️ 🔴 🟠 🟡 🚧 🔒",
-
         Sadness: "😢 😭 😞 💔 😔 🥺 😟 😿 🙁 ☹️ 😥 😓 😩 😫 🥀 🖤",
-
         Surprise: "😮 😲 🤯 😱 😳 🫢 🙀 😯 😦 😧 🤨 👀",
-
         Anger: "😡 😠 🤬 👿 💢 😤 😾 🖕 🔥 💥",
-
         Thinking: "🤔 🧐 🤨 💭 🧠 🤯 😶‍🌫️ 🫤 🤷 🤷‍♂️ 🤷‍♀️",
-
         Confusion: "😵 😵‍💫 🫨 😕 🙃 😬 🤷‍♂️ 🤷‍♀️ ❓ ❔",
-
         Cool: "😎 🆒 🧊 🥶 🕶️ 🔥 💯 👑 🐐 🗿",
-
         Sleepy: "😴 💤 🥱 😪 🌙 🌛 🌜 🛌 🛏️ 😌",
-
         Food: "🍕 🍔 🍟 🌭 🍿 🥪 🌮 🌯 🍜 🍝 🍣 🍱 🍛 🍚 🍰 🎂 🍩 🍪 🍫 🍉 🍓 🍇 🥭 🍎 🍌",
-
         Drinks: "☕ 🍵 🧋 🥤 🧃 🥛 🧊 🍹 🍸 🍷 🍺 🥂 🫖",
-
         Animals:
           "🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🐔 🦄 🐉 🦋 🐢 🐬 🦈 🦅 🐺",
-
         Nature:
           "🌍 🌎 🌏 🌞 🌝 🌙 ⭐ 🌟 ✨ ☀️ 🌤️ ⛅ 🌧️ ⛈️ 🌈 ❄️ 🌊 🌲 🌳 🌸 🌹 🌻 🍀 🌿 🍁",
-
         Weather: "☀️ 🌤️ ⛅ 🌥️ ☁️ 🌧️ ⛈️ 🌩️ 🌨️ ❄️ 🌪️ 🌫️ 🌈 🌬️ 💨 ☔ ⚡",
-
         Music: "🎵 🎶 🎼 🎤 🎧 🎹 🥁 🎸 🎺 🎻 🪇 🪘 🎷 🪈 🎙️ 💿 📀",
-
         Gaming: "🎮 🕹️ 👾 🎯 🏆 🥇 🎲 🃏 ♟️ 🎰 🔫 💣 ⚔️ 🛡️ 🧩",
-
         Technology: "💻 🖥️ 🖱️ ⌨️ 📱 📲 ☎️ 📞 🔋 🔌 💾 💿 🖨️ 🛠️ ⚙️ 🤖 🧠",
-
         Coding: "💻 👨‍💻 👩‍💻 🧑‍💻 ⌨️ 🖱️ 🐛 🪲 ⚙️ 🧩 🔧 🛠️ 📟 🖥️ 🔗",
-
         Money: "💰 💵 💴 💶 💷 💸 🪙 💳 🤑 🏦 📈 📉 💹 🧾 💎",
-
         Travel:
           "✈️ 🛫 🛬 🚀 🛸 🚗 🚕 🚌 🚎 🏎️ 🚓 🚑 🚒 🚲 🛵 🏍️ 🚆 🚄 🚇 🚢 🛳️ 🗺️ 🧭",
-
         Transport:
           "🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑 🚒 🚐 🚚 🚛 🚜 🏍️ 🛵 🚲 🛴 🚂 🚆 🚇 🚊 ✈️ 🚀",
-
         Sports: "⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🏓 🏸 🏒 🏑 🥊 🥋 🏏 ⛳ 🏹 🏋️ 🤸 🏆",
-
         Fitness: "💪 🏋️ 🏃 🚴 🏊 🤸 🤾 🧘 🥊 🥋 🏆 🔥 ⚡",
-
         School: "📚 📖 📝 ✏️ 🖊️ 🖋️ 📓 📔 📒 📕 📗 📘 📙 🎒 🏫 🧑‍🎓 🎓 🧮 📐 📏",
-
         Work: "💼 📊 📈 📉 📅 📆 🗓️ 📋 📌 📎 🖇️ 🗂️ 📁 📂 🖥️ 🤝 🧑‍💻",
-
         Art: "🎨 🖌️ 🖍️ 🖼️ 🎭 🎬 🎞️ 📷 📸 🧵 🪡 ✂️ 🧶 🖋️",
-
         Fashion: "👕 👖 👗 👘 🥻 🧥 🧦 👟 👞 👠 🥾 🧢 👒 🎩 👑 💍 💎 👜 🎒",
-
         Party: "🥳 🎉 🎊 🎈 🎂 🍰 🥂 🎶 🎵 🪩 🕺 💃 🎁 ✨",
-
         Fire: "🔥 ❤️‍🔥 💥 💣 🧨 🌋 ☄️ 🔥🔥",
-
         Magic: "✨ 🌟 🪄 🧙 🧙‍♂️ 🧙‍♀️ 🔮 🪬 🧿 🦄 🐉 🌌",
-
         Space: "🚀 🛸 👽 🪐 🌌 🌠 ☄️ 🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘 🌍 🌎 🌏",
-
         Flags: "🏳️ 🏴 🏁 🚩 🏳️‍🌈 🏳️‍⚧️ 🇮🇳 🇺🇸 🇬🇧 🇯🇵 🇰🇷 🇨🇦 🇦🇺 🇩🇪 🇫🇷 🇧🇷",
-
         Time: "⏰ ⏱️ ⏲️ 🕰️ ⌚ 📅 📆 🗓️ ⏳⌛ 🕛 🕐 🕑 🕒 🕓 🕔 🕕 🕖 🕗 🕘 🕙 🕚",
-
         Communication: "💬 🗨️ 🗯️ 💭 🗣️ 📢 📣 🔔 🔕 📩 📧 📨 📮 📝",
-
         Security: "🔒 🔓 🔐 🛡️ 🔑 🗝️ 🪪 🔏 🚨 🕵️ 🛡️",
-
         Health: "❤️ 🩺 💊 💉 🩹 🏥 🧬 🦠 🧫 🧪 🌡️ 🩻",
-
         CelebrationReactions: "🥳 🎉 🙌 🥂 🏆 🥇 🎆 🎇 ✨ 💯 🔥",
-
         Reactions: "👍 👎 ❤️ 😂 😮 😢 😡 🙏 👏 🤔 💯 🔥",
-
         Symbols: "❤️ 💯 ♻️ ⚕️ ☮️ ☯️ ✝️ ☪️ 🕉️ ⚛️ ♾️ ⚜️ 🔱",
-
         Arrows: "⬆️ ⬇️ ⬅️ ➡️ ↗️ ↘️ ↙️ ↖️ ↔️ ↕️ 🔄 🔃 🔙 🔚 🔛 🔜 🔝 " + ARROW,
-
         Numbers: "0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟",
-
         Hearts:
           "❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 🩷 🩵 💔 ❤️‍🔥 ❤️‍🩹 💕 💞 💓 💗 💖 💘 💝",
-
         Miscellaneous: "🎁 🔑 🗝️ 🔮 🪄 🧿 🪬 🧸 🪅 🪩 🪆 🪙 🧩 🪢 🪭 🪮",
       };
-
       const ESEQ = [
         "❤️🔥🎉",
         "👋😊",
@@ -1186,31 +955,87 @@
         "⚡",
         "🚀",
       ];
+      const PAT = {};
+      [
+        [
+          "Emergency",
+          [
+            ["pRB", "Police: red / blue", ["#ff0000", "#0000ff"]],
+            [
+              "pRWB",
+              "Police: red / white / blue",
+              ["#ff0000", "#ffffff", "#0000ff"],
+            ],
+            ["aRW", "Ambulance: red / white", ["#ff0000", "#ffffff"]],
+            ["aF", "Amber flashing", ["#ffbf00", "#000000"]],
+            ["rF", "Red flashing", ["#ff0000", "#000000"]],
+            ["bF", "Blue flashing", ["#0000ff", "#000000"]],
+          ],
+          1,
+        ],
+        [
+          "Alternating",
+          [
+            ["gw", "Green / white", ["#00c853", "#ffffff"]],
+            ["yw", "Yellow / white", ["#ffff00", "#ffffff"]],
+            ["pw", "Purple / white", ["#8a2be2", "#ffffff"]],
+            ["ow", "Orange / white", ["#ff8000", "#ffffff"]],
+            ["ga", "Green / amber", ["#00c853", "#ffbf00"]],
+            ["two", "Custom two colors", ["$1", "$2"]],
+          ],
+          1,
+        ],
+        [
+          "Cycling",
+          [
+            ["rgb", "Red / green / blue", ["#ff0000", "#00ff00", "#0000ff"]],
+            ["fire", "Fire", ["#ff0000", "#ff4500", "#ff8000", "#ffff00"]],
+            ["ocean", "Ocean", ["#001f7a", "#0077ff", "#00cfff", "#00ffff"]],
+            [
+              "pastel",
+              "Pastel",
+              ["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"],
+            ],
+            ["rain", "Rainbow (smooth)", null],
+          ],
+          1,
+        ],
+        [
+          "Steady",
+          [
+            ["sw", "White", ["#ffffff"]],
+            ["sr", "Red", ["#ff0000"]],
+            ["sa", "Amber", ["#ffbf00"]],
+            ["sg", "Green", ["#00c853"]],
+            ["sb", "Blue", ["#0000ff"]],
+            ["sc", "Custom color 1", ["$1"]],
+          ],
+          0,
+        ],
+      ].forEach(([g, a, f]) =>
+        a.forEach(([id, n, c]) => (PAT[id] = { n, g, c, f, h: !c })),
+      );
+      const COMBOS = [
+        ["#ffff00", "#000000", "Yellow on black"],
+        ["#ffffff", "#000000", "White on black"],
+        ["#000000", "#ffffff", "Black on white"],
+        ["#ffffff", "#b00000", "White on red"],
+        ["#000000", "#ffe600", "Black on yellow"],
+        ["#ffffff", "#0050c8", "White on blue"],
+        ["#00ff00", "#000000", "Green on black"],
+        ["#00ffff", "#000000", "Cyan on black"],
+        ["#ffb000", "#000000", "Amber on black"],
+        ["#000000", "#ff9900", "Black on orange"],
+      ];
 
-      const PAT = {
-        rb: { n: "Red / Blue alternating", c: ["#ff0000", "#0000ff"], f: 1 },
-        rw: { n: "Red / White alternating", c: ["#ff0000", "#ffffff"], f: 1 },
-        bw: { n: "Blue / White alternating", c: ["#0000ff", "#ffffff"], f: 1 },
-        rgb: {
-          n: "RGB color cycling",
-          c: ["#ff0000", "#00ff00", "#0000ff"],
-          f: 1,
-        },
-        rain: { n: "Rainbow cycling (smooth)", h: 1, f: 1 },
-        wf: { n: "White flashing", c: ["#ffffff", "#000000"], f: 1 },
-        sr: { n: "Solid red", c: ["#ff0000"] },
-        sb: { n: "Solid blue", c: ["#0000ff"] },
-        sw: { n: "Solid white", c: ["#ffffff"] },
-        sa: { n: "Solid amber", c: ["#ffbf00"] },
-        sg: { n: "Solid green", c: ["#00c853"] },
-        sc: { n: "Solid custom color (color 1)", c: ["$1"] },
-        two: { n: "Custom two-color pattern", c: ["$1", "$2"], f: 1 },
-      };
       const DEF = {
+        // ===== GENERAL =====
         theme: "dark",
         start: "home",
         steady: reduced,
         warned: false,
+
+        // ===== LIGHTING =====
         pattern: "sw",
         speed: 3,
         inten: 100,
@@ -1218,6 +1043,22 @@
         c2: "#0000ff",
         dur: 0,
         orient: "auto",
+
+        // Additional lighting options
+        brightnessMin: 10,
+        smooth: true,
+        transition: true,
+        transitionSpeed: 500,
+        randomColors: false,
+        reversePattern: false,
+        repeat: true,
+        pauseOnHidden: true,
+        keepScreenOn: true,
+        vibration: false,
+        soundEnabled: false,
+        soundVolume: 50,
+
+        // ===== TEXT DISPLAY =====
         text: "HELLO!",
         tsize: 60,
         tfg: "#ffff00",
@@ -1228,6 +1069,28 @@
         tmirror: false,
         tfit: true,
         tguides: false,
+
+        // Additional text options
+        tfont: "sans-serif",
+        tweight: "bold",
+        titalic: false,
+        toutline: false,
+        toutlineColor: "#000000",
+        toutlineWidth: 2,
+        tshadow: false,
+        tshadowColor: "#ffffff",
+        tspacing: 0,
+        tlineHeight: 1.2,
+        tvertical: false,
+        tblink: false,
+        tblinkSpeed: 3,
+        tgradient: false,
+        tgradient2: "#ff00ff",
+        tpadding: 20,
+        tcase: "none",
+        tposition: "center",
+
+        // ===== EMOJI DISPLAY =====
         emo: "👋😊",
         esize: 70,
         ebg: "#000000",
@@ -1235,7 +1098,45 @@
         espeed: 5,
         emsg: "HELP!",
         edur: 0,
+
+        // Additional emoji options
+        ealign: "center",
+        eanimation: "none",
+        espacing: 10,
+        emirror: false,
+        efit: true,
+        eoutline: false,
+        eoutlineColor: "#ffffff",
+        eblink: false,
+        eblinkSpeed: 3,
+        eopacity: 100,
+        eposition: "center",
+        ewrap: true,
+
+        // ===== ACCESSIBILITY =====
+        reduceMotion: false,
+        highContrast: false,
+        largeControls: false,
+        screenReaderLabels: true,
+        flashWarningAccepted: false,
+
+        // ===== DISPLAY & ORIENTATION =====
+        fullscreen: false,
+        autoRotate: true,
+        lockOrientation: false,
+        screenTimeout: 0,
+
+        // ===== TIMERS =====
+        countdown: 0,
+        autoStop: false,
+        scheduledStart: false,
+
+        // ===== SAVING & RESTORATION =====
+        autoSave: true,
+        rememberLastPattern: true,
+        restoreLastSession: true,
       };
+
       const COLORKEYS = ["c1", "c2", "tfg", "tbg", "ebg"];
 
       /* ---------- Storage ---------- */
@@ -1269,7 +1170,7 @@
             }
         },
       };
-      let S = Object.assign({}, DEF);
+      let S = { ...DEF };
       (() => {
         const v = Store.get("md_s", {});
         if (v && typeof v === "object")
@@ -1279,6 +1180,7 @@
               continue;
             S[k] = v[k];
           }
+        if (!PAT[S.pattern]) S.pattern = DEF.pattern;
       })();
       const save = () => Store.set("md_s", S);
       let L = Store.get("md_l", null);
@@ -1289,7 +1191,7 @@
         L = DLIB.map((m) => ({ ...m }));
       const saveL = () => Store.set("md_l", L);
 
-      /* ---------- UI helpers ---------- */
+      /* ---------- Helpers ---------- */
       let tt = 0;
       function toast(m) {
         const t = $("#toast");
@@ -1307,14 +1209,18 @@
       const sl = (k, l, o) =>
         `<label>${l}<select data-s="${k}">${o.map((x) => `<option value="${x[0]}">${x[1]}</option>`).join("")}</select></label>`;
       const DUR = [
-        [0, "Continuous (stays on until you stop it)"],
+        [0, "Continuous (until you stop it)"],
         [15, "15 seconds"],
         [30, "30 seconds"],
         [60, "1 minute"],
         [300, "5 minutes"],
       ];
-      const hd = (t) =>
-        `<header><button class="btn" data-go="home" aria-label="Back to home">← Home</button><h2>${t}</h2></header>`;
+      const ORI = [
+        ["auto", "Automatic"],
+        ["landscape", "Landscape"],
+        ["portrait", "Portrait"],
+      ];
+      const hd = (t) => `<header class="top"><h2>${t}</h2></header>`;
       const lum = (x) => {
         const n = parseInt(x.slice(1), 16);
         return (
@@ -1330,114 +1236,129 @@
               }).segment(s),
             ].map((x) => x.segment)
           : Array.from(s);
-      const opt = (a) => a.map((x) => [x, x]);
+      const chipRow = (id, cls = "") =>
+        `<div class="chips ${cls}" id="${id}"></div>`;
 
-      /* ---------- Screens (static markup only) ---------- */
-      const scr = (id, body) =>
-        `<section class="scr" id="s-${id}" hidden>${body}</section>`;
+      /* ---------- Screens ---------- */
+      const TABS = [
+        ["home", "🏠", "Home"],
+        ["vis", "💡", "Light"],
+        ["text", "🔤", "Text"],
+        ["emoji", "😀", "Emoji"],
+        ["emerg", "🆘", "SOS"],
+        ["lib", "⭐", "Saved"],
+      ];
+      const scr = (id, b) =>
+        `<section class="scr" id="s-${id}" hidden>${b}</section>`;
       $("#app").innerHTML =
-        `<section class="scr" id="s-home"><h1>MoltenDisplay</h1><p class="sub">Light up. Speak silently. Get noticed.</p>
-<button class="tile em" data-go="emerg"><b>🆘</b>Emergency</button>
-<div class="grid"><button class="tile" data-go="vis"><b>💡</b>Visibility</button><button class="tile" data-go="text"><b>🔤</b>Text Board</button>
-<button class="tile" data-go="emoji"><b>😀</b>Emoji Board</button><button class="tile" data-go="lib"><b>⭐</b>Quick Messages</button>
-<button class="tile wide" data-go="set"><b>⚙️</b>Settings</button></div>
+        `<section class="scr" id="s-home"><header class="top"><div><h1>MoltenDisplay</h1><p class="sub">Light up. Speak silently. Get noticed.</p></div><button class="btn" data-go="set" aria-label="Settings">⚙️</button></header>
+<button class="hero" data-go="emerg"><b>🆘</b>Emergency</button>
+<div class="grid"><button class="tile" data-go="vis"><b>💡</b>Visibility<span>Flashing and steady light</span></button>
+<button class="tile" data-go="text"><b>🔤</b>Text Board<span>Big, readable messages</span></button>
+<button class="tile" data-go="emoji"><b>😀</b>Emoji Board<span>Speak without words</span></button>
+<button class="tile" data-go="lib"><b>⭐</b>Saved Messages<span>Your own quick library</span></button></div>
 <p class="small">Works offline. Nothing starts or flashes until you press Start.</p></section>` +
         scr(
           "vis",
           hd("Visibility") +
-            sl(
-              "pattern",
-              "Lighting pattern",
-              Object.entries(PAT).map(([k, v]) => [k, v.n]),
-            ) +
-            `<div class="two">${co("c1", "Color 1 / custom color")}${co("c2", "Color 2")}</div>
-${rg("speed", "Animation speed (1 = slow, 10 = fastest allowed)", 1, 10)}${rg("inten", "Visual intensity (screen color dimming only)", 20, 100)}
-${sl("dur", "Duration", DUR)}${sl("orient", "Orientation (if browser allows)", [
-              ["auto", "Automatic"],
-              ["landscape", "Landscape"],
-              ["portrait", "Portrait"],
-            ])}
-${ck("steady", "Steady light only (no flashing)")}
+            `<div class="card">
+<label>Lighting pattern<select data-s="pattern">${[
+              "Emergency",
+              "Alternating",
+              "Cycling",
+              "Steady",
+            ]
+              .map(
+                (g) =>
+                  `<optgroup label="${g}">${Object.entries(PAT)
+                    .filter(([, v]) => v.g === g)
+                    .map(([k, v]) => `<option value="${k}">${v.n}</option>`)
+                    .join("")}</optgroup>`,
+              )
+              .join("")}</select></label>
+<div class="two">${co("c1", "Color 1 / custom")}${co("c2", "Color 2")}</div>
+${rg("speed", "Speed (slow → fast)", 1, 10)}${rg("inten", "Screen dimming (intensity)", 20, 100)}
+${sl("dur", "Duration", DUR)}${sl("orient", "Orientation (if browser allows)", ORI)}${ck("steady", "Steady light only (no flashing)")}</div>
 <div class="prev" id="vprev" aria-label="Pattern preview"></div>
 <button class="btn" id="vpv">Preview pattern (slow)</button>
-<div class="box"><b>Real brightness:</b> a web page cannot set phone brightness. Before use, swipe down and raise the system brightness slider yourself. "Intensity" only dims the colors on screen.</div>
+<div class="card small"><b>Real brightness:</b> a web page can’t set phone brightness. Raise the system brightness yourself first. “Intensity” only dims colors on screen.</div>
 <button class="btn pri" id="vgo">Start full screen</button><button class="btn" id="vsafe">Read safety notice</button>`,
         ) +
         scr(
           "text",
           hd("Text Board") +
-            `<div class="chips" id="pchips" aria-label="Message presets"></div>
+            `<div class="card"><h3>Quick pick</h3>${chipRow("pcats", "scrollx")}${chipRow("pchips")}</div>
 <label>Message<textarea data-s="text" maxlength="500"></textarea></label>
 <div class="prev" id="tprev" aria-label="Text preview"></div>
-<div class="chips"><button class="chip" data-sz="30">S</button><button class="chip" data-sz="60">M</button><button class="chip" data-sz="80">L</button><button class="chip" data-sz="100">XL</button>
-<button class="chip" id="tclr">Clear</button><button class="chip" id="trst">Reset style</button></div>
-${rg("tsize", "Text size (ignored when auto-fit is on)", 10, 100)}
-<div class="two">${co("tfg", "Text color")}${co("tbg", "Background")}</div>
-<div class="chips" id="combos" aria-label="High-contrast color combinations"></div>
+<div class="chips"><button class="chip" data-sz="30">S</button><button class="chip" data-sz="60">M</button><button class="chip" data-sz="80">L</button><button class="chip" data-sz="100">XL</button><button class="chip" id="tclr">Clear</button><button class="chip" id="trst">Reset style</button></div>
+<div class="card"><h3>Style</h3>${ck("tfit", "Auto-fit static text to screen")}${rg("tsize", "Text size (when auto-fit is off)", 10, 100)}
+<div class="two">${co("tfg", "Text color")}${co("tbg", "Background")}</div>${chipRow("combos", "scrollx")}
 ${sl("talign", "Alignment", [
   ["left", "Left"],
   ["center", "Center"],
   ["right", "Right"],
-])}
-${ck("tfit", "Auto-fit static text to screen")}${ck("tscroll", "Scrolling text")}${rg("tspeed", "Scroll speed", 1, 10)}${ck("tmirror", "Mirror text")}${ck("tguides", "Show guides in preview")}
-${sl("dur", "Duration", DUR)}${sl("orient", "Orientation", [
-              ["auto", "Automatic"],
-              ["landscape", "Landscape"],
-              ["portrait", "Portrait"],
-            ])}
+])}${ck("tmirror", "Mirror text")}${ck("tguides", "Show guides in preview")}
+<h3>Motion</h3>${ck("tscroll", "Scrolling text")}${rg("tspeed", "Scroll speed", 1, 10)}${sl("dur", "Duration", DUR)}${sl("orient", "Orientation", ORI)}</div>
 <button class="btn pri" id="tgo">Display</button>`,
         ) +
         scr(
           "emoji",
           hd("Emoji Board") +
-            `<div class="chips" id="ecats"></div><div class="emo" id="egrid"></div>
+            `<div class="card">${chipRow("ecats", "scrollx")}<div class="emo" id="egrid"></div></div>
 <label>Sequence (you can also type text)<input type="text" id="emoin" data-s="emo" maxlength="120"></label>
 <div class="row"><button class="chip" id="ebk">⌫ Delete last</button><button class="chip" id="eclr">Clear</button></div>
-<div class="chips" id="eseq" aria-label="Example sequences"></div>
+<div class="card"><h3>Ready-made</h3>${chipRow("eseq")}</div>
 <div class="prev" id="eprev" aria-label="Emoji preview"></div>
-${rg("esize", "Emoji size", 10, 100)}${co("ebg", "Background")}${ck("escroll", "Scrolling sequence")}${rg("espeed", "Scroll speed", 1, 10)}${sl("dur", "Duration", DUR)}
+<div class="card">${rg("esize", "Emoji size", 10, 100)}${co("ebg", "Background")}${ck("escroll", "Scrolling sequence")}${rg("espeed", "Scroll speed", 1, 10)}${sl("dur", "Duration", DUR)}</div>
 <button class="btn pri" id="ego">Display</button>`,
         ) +
         scr(
           "emerg",
           hd("Emergency") +
-            `<button class="btn dn" id="emain" style="min-height:120px;font-size:1.8rem"></button>
-<div class="grid" id="emgrid"></div>
+            `<button class="hero" id="emain"></button>
+<h3>Other messages</h3><div class="grid" id="emgrid"></div>
 <h3>SOS signal</h3><div class="grid"><button class="btn dn" id="sosf">SOS flashing</button><button class="btn" id="soss">SOS steady text</button></div>
-<div class="box"><div class="sos" aria-label="S: three short, O: three long, S: three short">• • •&nbsp; — — —&nbsp; • • •</div><p class="small">Three short flashes, three long flashes, three short flashes, then a pause. Long = 3× short. Static text is the safer default.</p></div>
-${sl("edur", "Duration", DUR)}
-<div class="box">This only shows text on this phone's screen. It does not call or message anyone, share location, or work as an approved beacon. A screen signal may not be noticed from a distance. Call local emergency services if you can.</div>`,
+<div class="card"><div class="sos" aria-label="S: three short, O: three long, S: three short">• • •&nbsp; — — —&nbsp; • • •</div><p class="small">Three short, three long, three short, then a pause. Static text is the safer default.</p></div>
+${sl("edur", "Duration", DUR)}${sl(
+              "emsg",
+              "Main emergency message",
+              EMG.map((x) => [x, x]),
+            )}
+<div class="card small">This only shows text on this phone’s screen. It doesn’t call or message anyone, share location, or act as an approved beacon. Call local emergency services if you can.</div>`,
         ) +
         scr(
           "lib",
-          hd("Quick Messages") +
-            `<label>Show<select id="lf"><option value="all">All</option><option value="fav">Favorites</option>${CATS.map((c) => `<option>${c}</option>`).join("")}</select></label>
-<div class="box"><label>Message<input type="text" id="lt" maxlength="500"></label>
-<div class="row" style="margin-top:8px"><select id="lc" style="flex:1">${CATS.map((c) => `<option>${c}</option>`).join("")}</select><button class="chip" id="lemo">+ Emoji Board sequence</button></div>
-<div class="row" style="margin-top:8px"><button class="btn pri" id="lsave" style="flex:1">Save message</button><button class="btn" id="lcan" hidden>Cancel edit</button></div></div>
+          hd("Saved Messages") +
+            `${chipRow("lcats", "scrollx")}
+<div class="card"><label>New or edited message<input type="text" id="lt" maxlength="500"></label>
+<div class="row"><select id="lc" style="flex:1">${CATS.map((c) => `<option>${c}</option>`).join("")}</select><button class="chip" id="lemo">+ Emoji sequence</button></div>
+<div class="row"><button class="btn pri" id="lsave" style="flex:1">Save message</button><button class="btn" id="lcan" hidden>Cancel</button></div></div>
 <ul id="ll"></ul>`,
         ) +
         scr(
           "set",
           hd("Settings") +
-            sl("theme", "Theme", [
+            `<div class="card">${sl("theme", "Theme", [
+              ["system", "Match device"],
               ["dark", "Dark"],
               ["light", "Light"],
               ["hc", "High contrast"],
-            ]) +
-            sl("start", "Start screen", [
-              ["home", "Home"],
-              ["vis", "Visibility"],
-              ["text", "Text Board"],
-              ["emoji", "Emoji Board"],
-              ["emerg", "Emergency"],
-              ["lib", "Quick Messages"],
-            ]) +
-            sl("emsg", "Default emergency display", opt(EMD)) +
-            ck("steady", "Steady light only (never flash)") +
-            `<button class="btn" id="ssafe">Safety notice</button><button class="btn dn" id="srst">Reset all data</button>
-<p class="small" id="sst"></p><p class="small">MoltenDisplay makes no network requests, collects nothing, and needs no permissions. Saved data lives in this browser and may not move with the file.</p>`,
+            ])}
+${sl(
+  "start",
+  "Start screen",
+  TABS.map((t) => [t[0], t[2]]),
+)}${ck("steady", "Steady light only (never flash)")}</div>
+<button class="btn" id="ssafe">Safety notice</button><button class="btn dn" id="srst">Reset all data</button>
+<button class="btn" data-go="home">← Back to Home</button>
+<p class="small" id="sst"></p><p class="small">MoltenDisplay makes no network requests and collects nothing. Saved data stays in this browser.</p>`,
         );
+      const tabs = $("#tabs div");
+      TABS.forEach(([id, i, l]) =>
+        tabs.append(
+          h("button", { "data-go": id, "aria-label": l }, h("b", {}, i), l),
+        ),
+      );
 
       /* ---------- Managers ---------- */
       const WL = {
@@ -1643,7 +1564,7 @@ ${sl("edur", "Duration", DUR)}
         t: 0,
         run(el, o) {
           this.halt();
-          const p = PAT[o.p] || PAT.rb,
+          const p = PAT[o.p] || PAT.pRB,
             cols = (p.c || []).map((c) =>
               c === "$1" ? o.c1 : c === "$2" ? o.c2 : c,
             );
@@ -1668,9 +1589,9 @@ ${sl("edur", "Duration", DUR)}
               i++;
               set();
             },
-            Math.max(250, 1500 / o.sp),
+            Math.max(334, 1500 / o.sp),
           );
-        },
+        } /* never faster than 3 changes per second */,
         halt() {
           clearInterval(this.t);
           this.t = 0;
@@ -1681,7 +1602,6 @@ ${sl("edur", "Duration", DUR)}
         on: true,
         paint() {
           content.style.backgroundColor = this.on ? "#ffffff" : "#000000";
-          content.style.color = this.on ? "#c00000" : "#ffffff";
         },
         run() {
           this.halt();
@@ -1744,7 +1664,7 @@ ${sl("edur", "Duration", DUR)}
             try {
               await screen.orientation.lock(S.orient);
             } catch {
-              toast("Could not lock orientation. Rotate your phone manually.");
+              toast("Couldn’t lock orientation. Rotate your phone manually.");
             }
           }
           if (!fs || !wl)
@@ -1752,7 +1672,7 @@ ${sl("edur", "Duration", DUR)}
               (fs ? "" : "Full screen unavailable here. ") +
                 (wl
                   ? ""
-                  : "Keep-awake unavailable: adjust your phone screen timeout."),
+                  : "Keep-awake unavailable: adjust your phone’s screen timeout."),
             );
         },
         stop(keep) {
@@ -1794,9 +1714,8 @@ ${sl("edur", "Duration", DUR)}
       document.addEventListener("visibilitychange", () => {
         const a = D.a;
         if (!a) return;
-        if (document.hidden) {
-          a.halt && a.halt();
-        } else {
+        if (document.hidden) a.halt && a.halt();
+        else {
           a.run && a.run();
           WL.on();
         }
@@ -1807,20 +1726,19 @@ ${sl("edur", "Duration", DUR)}
         rz = setTimeout(() => {
           if (D.a && D.a.render) {
             D.a.render(content);
-            D.a.run && D.a.name === "SOS" && SOS.paint();
+            D.a.name === "SOS" &&
+              SOS.on !== undefined &&
+              D.a.run &&
+              SOS.paint();
           } else refresh();
         }, 150);
       });
-      $("#stopBtn").addEventListener("keydown", (e) => {
-        if (e.key === "Escape") D.stop();
-      });
-
-      const textSpec = (t, name) => ({
-        name: name || "Text Board",
-        dur: S.dur,
-        render: (b) => renderText(b, tOpts(t)),
-      });
-      const showText = (t) => D.start(textSpec(t));
+      const showText = (t) =>
+        D.start({
+          name: "Text Board",
+          dur: S.dur,
+          render: (b) => renderText(b, tOpts(t)),
+        });
       const showEm = (t) =>
         D.start({
           name: "Emergency",
@@ -1839,23 +1757,23 @@ ${sl("edur", "Duration", DUR)}
         m.replaceChildren(
           h(
             "div",
-            { class: "box" },
+            { class: "card" },
             h("h2", { id: "mt" }, "Safety notice"),
             h(
               "ul",
               {},
               ...[
-                "A phone screen is not a substitute for reflective clothing or approved safety lights.",
-                "Visibility through fog or at distance is not guaranteed, and drivers may not notice a phone screen.",
-                "Rapid flashing can cause discomfort or photosensitive reactions. Do not stare at flashing patterns.",
+                "A phone screen isn’t a substitute for reflective clothing or approved safety lights.",
+                "Visibility through fog or at distance isn’t guaranteed, and drivers may not notice a phone screen.",
+                "Rapid flashing can cause discomfort or photosensitive reactions. Don’t stare at flashing patterns.",
                 "Emergency-style flashing colors may be regulated where you live.",
-                "This app does not contact emergency services and cannot guarantee an SOS display is recognized.",
-                "Steady light and static text modes are available for all essential uses.",
+                "This app doesn’t contact emergency services and can’t guarantee an SOS display is recognized.",
+                "Steady light and static text are available for all essential uses.",
               ].map((t) => h("li", {}, t)),
             ),
             h(
               "div",
-              { class: "row", style: "margin-top:12px" },
+              { class: "row" },
               h(
                 "button",
                 {
@@ -1911,7 +1829,11 @@ ${sl("edur", "Duration", DUR)}
         });
       }
       const sync = () => $$("[data-s]").forEach((e) => e._rd && e._rd());
-      const theme = () => (document.documentElement.dataset.theme = S.theme);
+      const theme = () => {
+        S.theme === "system"
+          ? document.documentElement.removeAttribute("data-theme")
+          : (document.documentElement.dataset.theme = S.theme);
+      };
       let cur = "home",
         pvOn = false;
       const Vp = {
@@ -1930,17 +1852,25 @@ ${sl("edur", "Duration", DUR)}
           b.classList.toggle("guides", S.tguides);
         }
       }
+      const set = (k, v) => {
+        S[k] = v;
+        save();
+        sync();
+        refresh();
+      };
       function refresh() {
         if (cur === "vis") {
           const p = $("#vprev");
-          if (pvOn) V.run(p, vo(Math.min(S.speed, 3)));
-          else {
-            V.run(p, { ...vo(1), steady: true });
-          }
+          pvOn
+            ? V.run(p, vo(Math.min(S.speed, 3)))
+            : V.run(p, { ...vo(1), steady: true });
         }
-        if (cur === "text") pre("#tprev", tOpts());
+        if (cur === "text") {
+          pre("#tprev", tOpts());
+          drawPick();
+        }
         if (cur === "emoji") pre("#eprev", eOpts());
-        if (cur === "emerg") $("#emain").textContent = "SHOW: " + S.emsg;
+        if (cur === "emerg") $("#emain").innerHTML = "<b>🆘</b>SHOW: " + S.emsg;
         if (cur === "lib") renderLib();
       }
       function go(id) {
@@ -1949,6 +1879,11 @@ ${sl("edur", "Duration", DUR)}
         V.halt();
         cur = id;
         $$(".scr").forEach((s) => (s.hidden = s.id !== "s-" + id));
+        $$("#tabs button").forEach((b) =>
+          b.dataset.go === id
+            ? b.setAttribute("aria-current", "page")
+            : b.removeAttribute("aria-current"),
+        );
         sync();
         refresh();
         scrollTo(0, 0);
@@ -1958,13 +1893,7 @@ ${sl("edur", "Duration", DUR)}
         if (g) go(g.dataset.go);
       });
       bind(document, (k) => {
-        if (
-          k === "dur" ||
-          k === "edur" ||
-          k === "orient" ||
-          k === "start" ||
-          k === "warned"
-        )
+        if (["dur", "edur", "orient", "start", "warned", "theme"].includes(k))
           return;
         refresh();
       });
@@ -1978,36 +1907,52 @@ ${sl("edur", "Duration", DUR)}
         refresh();
       };
       $("#vgo").onclick = () =>
-        gate(() => {
+        gate(() =>
           D.start({
             name: "Visibility",
             dur: S.dur,
             dim: (100 - S.inten) / 100,
             run: () => V.run(content, vo(S.speed)),
             halt: () => V.halt(),
-          });
-        });
+          }),
+        );
       $("#vsafe").onclick = $("#ssafe").onclick = () => safety();
 
       /* ---------- Text board ---------- */
-      const pc = $("#pchips");
-      P.forEach((p) =>
-        pc.append(
-          h(
-            "button",
-            {
-              class: "chip",
-              onclick: () => {
-                S.text = p;
-                save();
-                sync();
-                refresh();
-              },
-            },
-            p,
+      let pcat = CATS[0];
+      function drawPick() {
+        const c = $("#pcats");
+        if (!c.children.length)
+          CATS.forEach((k) =>
+            c.append(
+              h(
+                "button",
+                {
+                  class: "chip",
+                  onclick: () => {
+                    pcat = k;
+                    drawPick();
+                  },
+                },
+                k,
+              ),
+            ),
+          );
+        $$("#pcats button").forEach((b) =>
+          b.setAttribute("aria-pressed", b.textContent === pcat),
+        );
+        const p = $("#pchips");
+        p.replaceChildren();
+        L.filter((m) => m.c === pcat).forEach((m) =>
+          p.append(
+            h(
+              "button",
+              { class: "chip", onclick: () => set("text", m.t) },
+              m.t,
+            ),
           ),
-        ),
-      );
+        );
+      }
       $$("[data-sz]").forEach(
         (b) =>
           (b.onclick = () => {
@@ -2018,12 +1963,7 @@ ${sl("edur", "Duration", DUR)}
             refresh();
           }),
       );
-      $("#tclr").onclick = () => {
-        S.text = "";
-        save();
-        sync();
-        refresh();
-      };
+      $("#tclr").onclick = () => set("text", "");
       $("#trst").onclick = () => {
         [
           "tsize",
@@ -2039,96 +1979,7 @@ ${sl("edur", "Duration", DUR)}
         sync();
         refresh();
       };
-
-      const COLOR_OPTIONS = [
-        // Original options
-        ["#ffff00", "#000000", "Yellow on black"],
-        ["#ffffff", "#000000", "White on black"],
-        ["#000000", "#ffffff", "Black on white"],
-        ["#ffffff", "#b00000", "White on red"],
-        ["#000000", "#ffe600", "Black on yellow"],
-        ["#ffffff", "#0050c8", "White on blue"],
-
-        // High-contrast combinations
-        ["#00ff00", "#000000", "Green on black"],
-        ["#00ffff", "#000000", "Cyan on black"],
-        ["#ff00ff", "#000000", "Magenta on black"],
-        ["#ff8000", "#000000", "Orange on black"],
-        ["#ffffff", "#003300", "White on dark green"],
-        ["#ffffff", "#191970", "White on midnight blue"],
-        ["#ffffff", "#4a148c", "White on deep purple"],
-        ["#ffffff", "#4a0000", "White on dark red"],
-        ["#ffffff", "#333333", "White on dark gray"],
-
-        // Bright warning combinations
-        ["#000000", "#ffcc00", "Black on amber"],
-        ["#000000", "#ff9900", "Black on orange"],
-        ["#ffffff", "#ff0000", "White on bright red"],
-        ["#ffffff", "#cc0000", "White on dark red"],
-        ["#000000", "#00ff00", "Black on neon green"],
-        ["#000000", "#00ffff", "Black on cyan"],
-        ["#000000", "#ff66cc", "Black on pink"],
-        ["#000000", "#ff00ff", "Black on magenta"],
-
-        // Additional light backgrounds
-        ["#111111", "#f5f5f5", "Near-black on off-white"],
-        ["#222222", "#fffacd", "Dark gray on lemon cream"],
-        ["#000000", "#e6f7ff", "Black on pale blue"],
-        ["#000000", "#e8ffe8", "Black on pale green"],
-        ["#000000", "#ffe8e8", "Black on pale red"],
-        ["#000000", "#f3e5ff", "Black on pale purple"],
-        ["#000000", "#fff0dc", "Black on pale orange"],
-
-        // Additional dark backgrounds
-        ["#e0e0e0", "#121212", "Light gray on near-black"],
-        ["#00ffcc", "#101820", "Mint on dark navy"],
-        ["#ffccff", "#202020", "Pink on charcoal"],
-        ["#ffd700", "#202020", "Gold on charcoal"],
-        ["#b3e5fc", "#0d1b2a", "Light blue on dark navy"],
-        ["#c8e6c9", "#1b1b1b", "Light green on charcoal"],
-        ["#ffccbc", "#263238", "Peach on blue-gray"],
-
-        // Blue combinations
-        ["#ffffff", "#003366", "White on navy blue"],
-        ["#ffffff", "#0050c8", "White on royal blue"],
-        ["#000000", "#66ccff", "Black on sky blue"],
-        ["#ffffff", "#000080", "White on navy"],
-        ["#ffff00", "#000080", "Yellow on navy"],
-        ["#00ffff", "#000080", "Cyan on navy"],
-
-        // Green combinations
-        ["#ffffff", "#006400", "White on dark green"],
-        ["#ffffff", "#008000", "White on green"],
-        ["#ffff00", "#004400", "Yellow on forest green"],
-        ["#000000", "#7cfc00", "Black on lawn green"],
-
-        // Red combinations
-        ["#ffffff", "#800000", "White on maroon"],
-        ["#ffff00", "#800000", "Yellow on maroon"],
-        ["#ffffff", "#8b0000", "White on dark red"],
-        ["#000000", "#ff6666", "Black on light red"],
-
-        // Purple combinations
-        ["#ffffff", "#301060", "White on deep violet"],
-        ["#ffff00", "#4b0082", "Yellow on indigo"],
-        ["#000000", "#dda0dd", "Black on plum"],
-        ["#ffffff", "#663399", "White on rebecca purple"],
-
-        // Monochrome combinations
-        ["#ffffff", "#000000", "Classic monochrome"],
-        ["#d9d9d9", "#262626", "Gray on charcoal"],
-        ["#000000", "#bfbfbf", "Black on silver"],
-        ["#ffffff", "#404040", "White on dark gray"],
-
-        // Inverted and special themes
-        ["#000000", "#ffff00", "Inverted yellow warning"],
-        ["#000000", "#00ff00", "Inverted green warning"],
-        ["#000000", "#ff6600", "Inverted orange warning"],
-        ["#ffffff", "#000000", "Pure black night mode"],
-        ["#00ff00", "#000000", "Green terminal"],
-        ["#ffb000", "#000000", "Amber terminal"],
-        ["#ff0000", "#000000", "Red terminal"],
-      ].forEach(([f, b, n]) => {
+      COMBOS.forEach(([f, b, n]) => {
         const c = h(
           "button",
           {
@@ -2160,12 +2011,7 @@ ${sl("edur", "Duration", DUR)}
               "button",
               {
                 "aria-label": "Add " + e,
-                onclick: () => {
-                  S.emo = (S.emo + e).slice(0, 120);
-                  save();
-                  sync();
-                  refresh();
-                },
+                onclick: () => set("emo", (S.emo + e).slice(0, 120)),
               },
               e,
             ),
@@ -2192,35 +2038,15 @@ ${sl("edur", "Duration", DUR)}
       );
       ESEQ.forEach((s) =>
         $("#eseq").append(
-          h(
-            "button",
-            {
-              class: "chip",
-              onclick: () => {
-                S.emo = s;
-                save();
-                sync();
-                refresh();
-              },
-            },
-            s,
-          ),
+          h("button", { class: "chip", onclick: () => set("emo", s) }, s),
         ),
       );
       $("#ebk").onclick = () => {
         const a = seg(S.emo);
         a.pop();
-        S.emo = a.join("");
-        save();
-        sync();
-        refresh();
+        set("emo", a.join(""));
       };
-      $("#eclr").onclick = () => {
-        S.emo = "";
-        save();
-        sync();
-        refresh();
-      };
+      $("#eclr").onclick = () => set("emo", "");
       $("#ego").onclick = () =>
         D.start({
           name: "Emoji Board",
@@ -2231,7 +2057,7 @@ ${sl("edur", "Duration", DUR)}
 
       /* ---------- Emergency ---------- */
       $("#emain").onclick = () => showEm(S.emsg);
-      EM.forEach((m) =>
+      EMG.forEach((m) =>
         $("#emgrid").append(
           h(
             "button",
@@ -2273,23 +2099,40 @@ ${sl("edur", "Duration", DUR)}
       };
       $("#soss").onclick = () => D.start(sosSpec(false));
 
-      /* ---------- Quick messages ---------- */
-      let ei = -1;
+      /* ---------- Saved messages ---------- */
+      let ei = -1,
+        lf = "all";
       const bt = (t, f, l) =>
         h("button", { class: "chip", "aria-label": l || t, onclick: f }, t);
       function renderLib() {
-        const f = $("#lf").value,
-          ul = $("#ll");
+        const lc = $("#lcats");
+        lc.replaceChildren();
+        ["all", "fav", ...CATS].forEach((k) => {
+          const b = h(
+            "button",
+            {
+              class: "chip",
+              onclick: () => {
+                lf = k;
+                renderLib();
+              },
+            },
+            k === "all" ? "All" : k === "fav" ? "★ Favorites" : k,
+          );
+          b.setAttribute("aria-pressed", lf === k);
+          lc.append(b);
+        });
+        const ul = $("#ll");
         ul.replaceChildren();
         const rows = L.map((m, i) => ({ m, i }))
-          .filter((x) => f === "all" || (f === "fav" ? x.m.f : x.m.c === f))
+          .filter((x) => lf === "all" || (lf === "fav" ? x.m.f : x.m.c === lf))
           .sort((a, b) => (b.m.f ? 1 : 0) - (a.m.f ? 1 : 0));
         if (!rows.length)
           ul.append(
             h(
               "li",
               { class: "small" },
-              "No messages here yet. Write one above and save it.",
+              "Nothing here yet. Write a message above and save it.",
             ),
           );
         rows.forEach(({ m, i }) =>
@@ -2298,7 +2141,7 @@ ${sl("edur", "Duration", DUR)}
               "li",
               { class: "m" },
               h("div", { class: "mt" }, m.t),
-              h("small", {}, m.c),
+              h("small", { class: "small" }, m.c),
               h(
                 "div",
                 { class: "row" },
@@ -2346,7 +2189,6 @@ ${sl("edur", "Duration", DUR)}
         $("#lsave").textContent = "Save message";
         $("#lcan").hidden = true;
       }
-      $("#lf").onchange = renderLib;
       $("#lcan").onclick = endEdit;
       $("#lemo").onclick = () => {
         $("#lt").value = ($("#lt").value + " " + S.emo).trim().slice(0, 500);
@@ -2374,7 +2216,7 @@ ${sl("edur", "Duration", DUR)}
       /* ---------- Settings ---------- */
       $("#srst").onclick = () => {
         if (!confirm("Reset all settings and saved messages?")) return;
-        S = Object.assign({}, DEF);
+        S = { ...DEF };
         L = DLIB.map((m) => ({ ...m }));
         save();
         saveL();
@@ -2390,7 +2232,7 @@ ${sl("edur", "Duration", DUR)}
       /* ---------- Init ---------- */
       theme();
       go(
-        ["home", "vis", "text", "emoji", "emerg", "lib"].includes(S.start)
+        TABS.some((t) => t[0] === S.start) || S.start === "set"
           ? S.start
           : "home",
       );
